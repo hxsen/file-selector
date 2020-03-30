@@ -62,7 +62,7 @@
                 </div><!-- /.modal -->
             </div>
         </div>
-        <input type="hidden" name="{{$name}}" id="{{$column}}" value="{{ json_encode(old($column, $value)) }}">
+        <input type="hidden" name="{{$name}}" id="{{$column}}" value="{{ old($column, $value) }}">
         <div id="preview-{{$column}}"></div>
 
 
@@ -71,35 +71,53 @@
 </div>
 
 <script>
+    // 闭包处理元素，限制变量，防止变量污染，主要面向多次的引入该插件的操作
     $(function() {
-        // 定义新增的图片变量
-        let image_{{$column}};
-        // 定义网址的默认网址
-        let basePath = '{{ $basePath }}';
+        /*
+         * 定义自己需要的或者已经衍生的变量
+         */
+
+        let column = '{{$column}}';
+        // 定义当前hide的input元素
+        let hideInput = $('#' + column);
+        // 定义媒体暂存的变量
+        let mediaDisk;
+        // 定义网址的默认路径开始的部分
+        let basePath = '{{ $basePath }}/';
         // 定义input的框的类型
         let inputType = '{{ $type }}';
+        // 定义当前可以选择的所有媒体选框的input
+        let inputBox = $('input[name="'+ column +'-pic"]:' + inputType);
 
         // 指定默认值是数组还是字符串
-        if(inputType === 'radio'){
-            image_{{$column}} = '';
-        }else{
-            image_{{$column}} = [];
+        mediaDisk = hideInput.val();
+        if(inputType === 'checkbox'){
+            mediaDisk = mediaDisk ? JSON.parse(mediaDisk) : [];
         }
 
         // 首次加载图片列表
-        if ($('#{{$column}}').val() !== "null") {
-            image_{{$column}} = JSON.parse($('#{{$column}}').val());
-            $('#preview-{{$column}}').html(preview(image_{{$column}}));
-            for (let n = 0; n < $('.{{$column}}-pic>input:checkbox').length; n++) {
-                if (image_{{$column}}.indexOf($('.{{$column}}-pic>input:checkbox')[n].value) !== -1) {
-                    $('.{{$column}}-pic>input:checkbox')[n].checked = true;
+        if (hideInput.val() !== "null") {
+            // 布局已经渲染的图片列表
+            $('#preview-' + column).html(preview(mediaDisk));
+            // 设置当前旧的媒体文件的状态
+            let thisVal;
+            inputBox.each(function(){
+                thisVal = basePath + $(this).val();
+
+                if (mediaDisk.indexOf(thisVal) !== -1) {
+                    $(this).parent().addClass('checked');
                 }
-            }
+            });
+        }else{
+            // 如果是null的情况下，设置value为空字符串
+            hideInput.val('');
         }
+
         // 监听个人的checkbox的点击操作
+        // 本身里面的input的值没有用到，它只是提供值而已
         $('.mycheckbox').click(function(){
             // $(this).toggleClass('checked');
-            let imgUrl = basePath + '/' + $(this).find('input[type="'+ inputType +'"]').val();
+            let imgUrl = basePath + $(this).find('input[type="'+ inputType +'"]').val();
 
             if($(this).hasClass('checked')){
                 toggleImage(false, imgUrl);
@@ -116,7 +134,7 @@
 
         // 控制显示与隐藏的图片选择框
         $('.modal-dialog').click(function () {
-            $('#file-browser-{!!$column!!}').modal('hide');
+            $('#file-browser-' + column).modal('hide');
         });
         $(".modal-content").click(function (event) {
             event.stopPropagation();
@@ -141,26 +159,26 @@
 
             if(inputType === 'radio'){
                 if(status){
-                    image_{{$column}} = imgUrl;
+                    mediaDisk = imgUrl;
                 }else{
-                    image_{{$column}} = '';
+                    mediaDisk = '';
                 }
                 // 加入值
-                $('#{{$column}}').val(image_{{$column}});
+                hideInput.val(mediaDisk);
             }else{
                 if(status){
-                    image_{{$column}}.push(imgUrl);
+                    mediaDisk.push(imgUrl);
                 }else{
-                    let index = image_{{$column}}.indexOf(imgUrl);
+                    let index = mediaDisk.indexOf(imgUrl);
                     if (index > -1) {
-                        image_{{$column}}.splice(index, 1);
+                        mediaDisk.splice(index, 1);
                     }
                 }
-                $('#{{$column}}').val(JSON.stringify(image_{{$column}}));
+                hideInput.val(JSON.stringify(mediaDisk));
             }
 
             // 重新渲染页面的值
-            $('#preview-{{$column}}').html(preview(image_{{$column}}));
+            $('#preview-' + column).html(preview(mediaDisk));
         }
     })
 </script>

@@ -50,6 +50,8 @@
 
 .file-icon.has-img {
     padding: 0;
+    padding-bottom: 10px;
+    margin-right: 10px;
 }
 
 .file-icon.has-img>img {
