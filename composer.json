@@ -1,14 +1,14 @@
 {
     "name": "hxsen/file-selector",
-    "description": "description...",
+    "description": "A file selector for laravel-admin",
     "type": "library",
     "keywords": ["laravel-admin", "extension"],
     "homepage": "https://github.com/hxsen/file-selector",
     "license": "MIT",
     "authors": [
         {
-            "name": "your name",
-            "email": "your email"
+            "name": "houxin",
+            "email": "hx@hxsen.com"
         }
     ],
     "require": {
