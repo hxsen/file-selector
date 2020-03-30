@@ -1,6 +1,6 @@
 laravel-admin extension
 ======
-
+laravel-admin的扩展，选择并使用媒体库的文件
 ### 安装
 ```
 omposer require hxsen/file-selector
