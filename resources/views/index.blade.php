@@ -113,7 +113,6 @@
         }
 
         // 监听个人的checkbox的点击操作
-        // 本身里面的input的值没有用到，它只是提供值而已
         modal.find('.mycheckbox').click(function(){
             let imgUrl = basePath + $(this).data('file-path');
 
@@ -125,8 +124,7 @@
                 // 单选框移除其他的所有选中
                 if(inputType === 'radio') {
                     // 这是单选操作
-                    // files
-                    $(this).removeClass('checked');
+                    $(this).parents('.files').find('.mycheckbox').removeClass('checked');
                 }
                 $(this).addClass('checked');
             }
