@@ -14,7 +14,6 @@
                 <button class="btn btn-info" type="button">选择文件</button>
             </a>
             <!-- 模态框（Modal） -->
-
             <div class="modal fade" id="file-browser-{!!$column!!}" tabindex="-1" role="dialog"
                  aria-labelledby="file-browser-label" aria-hidden="true">
                 <div class="modal-dialog" style="width: 90%;height: 100%;">
@@ -32,9 +31,7 @@
                                         @if(!$item['isDir'])
                                             <li>
                                                 <span class="file-select {{$column}}-pic">
-                                                    <div class="{{ $type == 'radio' ? 'iradio_minimal-blue' : 'icheckbox_minimal-blue' }} mycheckbox" >
-                                                        <input type="{{ $type }}" name="{!!$column!!}-pic" value="{{ $item['name'] }}" style="position: absolute; opacity: 0;"/>
-                                                    </div>
+                                                    <div class="{{ $type == 'radio' ? 'iradio_minimal-blue' : 'icheckbox_minimal-blue' }} mycheckbox" data-file-path="{{ $item['name'] }}"></div>
                                                 </span>
 
                                                 {!! $item['preview'] !!}
@@ -76,8 +73,10 @@
         /*
          * 定义自己需要的或者已经衍生的变量
          */
-
+        // 定义自己的input字段名
         let column = '{{$column}}';
+        // 定义自己得到modal框
+        let modal = $("#file-browser-" + column);
         // 定义当前hide的input元素
         let hideInput = $('#' + column);
         // 定义媒体暂存的变量
@@ -115,9 +114,8 @@
 
         // 监听个人的checkbox的点击操作
         // 本身里面的input的值没有用到，它只是提供值而已
-        $('.mycheckbox').click(function(){
-            // $(this).toggleClass('checked');
-            let imgUrl = basePath + $(this).find('input[type="'+ inputType +'"]').val();
+        modal.find('.mycheckbox').click(function(){
+            let imgUrl = basePath + $(this).data('file-path');
 
             if($(this).hasClass('checked')){
                 toggleImage(false, imgUrl);
@@ -126,17 +124,19 @@
                 toggleImage(true, imgUrl);
                 // 单选框移除其他的所有选中
                 if(inputType === 'radio') {
-                    $('.mycheckbox').removeClass('checked');
+                    // 这是单选操作
+                    // files
+                    $(this).removeClass('checked');
                 }
                 $(this).addClass('checked');
             }
         });
 
         // 控制显示与隐藏的图片选择框
-        $('.modal-dialog').click(function () {
+        modal.find('.modal-dialog').click(function () {
             $('#file-browser-' + column).modal('hide');
         });
-        $(".modal-content").click(function (event) {
+        modal.find(".modal-content").click(function (event) {
             event.stopPropagation();
         });
         function preview(list) {
