@@ -13,13 +13,6 @@ class FileSelectorField extends Field
     protected $path = '/';
     protected $type = 'radio';
 
-    protected static $css = [
-//        '/vendor/hxsen/file-selector/file-selector.css',
-    ];
-
-    protected static $js = [
-//        '/vendor/hxsen/file-selector/file-selector.js',
-    ];
     private function getMedia()
     {
         $fullUrl = config('filesystems.disks.'.config('admin.extensions.media-manager.disk').'.url');

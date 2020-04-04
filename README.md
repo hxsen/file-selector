@@ -10,11 +10,6 @@ omposer require hxsen/file-selector
 ```
 php artisan vendor:publish --provider=Encore\FileSelector\FileSelectorServiceProvider
 ```
-### 配置
-注册进laravel-admin,在app/Admin/bootstrap.php中添加以下代码：
-```
-Encore\Admin\Form::extend('media', \Encore\FileSelector\FileSelectorField::class);
-```
 
 ### 依赖说明(如果已安装，可跳过)
 该插件依赖media-manager插件(如果已经安装并配置过该插件，可以忽略)
