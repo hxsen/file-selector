@@ -10,6 +10,17 @@ omposer require hxsen/file-selector
 ```
 php artisan vendor:publish --provider=Encore\FileSelector\FileSelectorServiceProvider
 ```
+### 配置管理
+打开`config/admin.php`，在扩展部分添加属于此扩展的配置。
+```
+    'extensions' => [
+
+        'file-selector' => [
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
+        ]
+    ]
+```
 
 ### 依赖说明(如果已安装，可跳过)
 该插件依赖media-manager插件(如果已经安装并配置过该插件，可以忽略)
